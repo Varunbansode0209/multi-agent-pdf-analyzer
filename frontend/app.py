@@ -52,11 +52,13 @@ if "documents" not in st.session_state:
 def api_request(method, endpoint, **kwargs):
     """Send an HTTP request to the FastAPI backend."""
 
+    timeout = kwargs.pop("timeout", REQUEST_TIMEOUT)
+
     try:
         response = requests.request(
             method,
             f"{API_BASE_URL}{endpoint}",
-            timeout=REQUEST_TIMEOUT,
+            timeout=timeout,
             **kwargs,
         )
 
@@ -88,7 +90,6 @@ def api_request(method, endpoint, **kwargs):
         st.error(f"Request failed: {exc}")
 
     return None
-
 
 def refresh_documents():
     documents = api_request("GET", "/documents")
